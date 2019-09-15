@@ -145,7 +145,8 @@ class Pong:
                 sys.exit(1)
 
             if ball.y > self.HEIGHT - self.BALL_WIDTH or ball.y < 0:
-                ball.angle = -ball.angle
+                sys.exit(1)
+                # ball.angle = -ball.angle
 
     def check_ball_hits_paddle(self):
         for ball in self.balls:
