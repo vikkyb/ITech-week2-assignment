@@ -1,7 +1,7 @@
 import sys
 import pygame
 import random
-
+import numpy as np
 
 class Paddle(pygame.Rect):
     def __init__(self, velocity, up_key, down_key, left_key, right_key, *args, **kwargs):
@@ -40,8 +40,7 @@ class Ball(pygame.Rect):
 
     def move_ball(self):
         self.x += self.velocity
-        self.y += self.angle
-
+        self.y += round(self.angle)
 
 class Bar(pygame.Rect):
     def __init__(self, velocity, *args, **kwargs):
@@ -74,8 +73,8 @@ class Pong:
 
     COLOUR = (255, 255, 255)
 
-    FADE = 10           # Adjust to change fade out speed, higher is faster
-    RATIO_GOOD = 4      # RATIO_GOOD times more likely to pass a good ball than a bad ball
+    FADE = 10  # Adjust to change fade out speed, higher is faster
+    RATIO_GOOD = 4  # RATIO_GOOD times more likely to pass a good ball than a bad ball
 
     def __init__(self):
         pygame.init()  # Start the pygame instance.
@@ -123,13 +122,13 @@ class Pong:
             self.BALL_WIDTH
         ))
 
-        self.central_line = pygame.Rect(self.WIDTH/2, 0, 1, self.HEIGHT)
+        self.central_line = pygame.Rect(self.WIDTH / 2, 0, 1, self.HEIGHT)
 
         # For lighting up right side of the field
         self.light_up_right = 0
         self.light_up_colour_right = (255, 255, 255)
         self.fade_colour_right = (self.FADE, self.FADE, self.FADE)
-        self.light_up_rect_right = pygame.Rect(self.WIDTH/2, 0, self.WIDTH / 2, self.HEIGHT)
+        self.light_up_rect_right = pygame.Rect(self.WIDTH / 2, 0, self.WIDTH / 2, self.HEIGHT)
 
         # For lighting up left side of the field
         self.light_up_left = 0
@@ -153,9 +152,9 @@ class Pong:
             for paddle in self.paddles:
                 if ball.colliderect(paddle):
                     ball.velocity = -ball.velocity
-                    ball.x += ball.velocity*3
-                    ball.angle = random.randint(-10, 10)
-                    if ball.x > self.WIDTH/2 and not self.light_up_right:
+                    ball.x += ball.velocity * 5
+                    ball.angle = (((300-ball.y)/300) + (np.random.random()-0.5))*abs(ball.velocity)
+                    if ball.x > self.WIDTH / 2 and not self.light_up_right:
                         self.start_light_up_right(random.choices([True, False], weights=[self.RATIO_GOOD, 1], k=1)[0])
                     elif not self.light_up_left:
                         self.start_light_up_left(random.choices([True, False], weights=[self.RATIO_GOOD, 1], k=1)[0])
@@ -198,7 +197,6 @@ class Pong:
 
     def game_loop(self):
         while True:
-            col = 0
 
             for event in pygame.event.get():
                 # Add some extra ways to exit the game.
@@ -258,9 +256,9 @@ class Pong:
 
             pygame.display.flip()
             self.clock.tick(60)
-            # print(round(pygame.time.get_ticks()/1000))
 
 
 if __name__ == '__main__':
     pong = Pong()
     pong.game_loop()
+
