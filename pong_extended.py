@@ -3,6 +3,7 @@ import pygame
 import random
 import numpy as np
 
+
 class Paddle(pygame.Rect):
     def __init__(self, velocity, up_key, down_key, left_key, right_key, *args, **kwargs):
         self.velocity = velocity
@@ -45,6 +46,7 @@ class Ball(pygame.Rect):
     def change_velocity_ball(self, multiplier):
         self.velocity = self.velocity * multiplier
 
+
 class Bar(pygame.Rect):
     def __init__(self, velocity, *args, **kwargs):
         self.velocity = velocity
@@ -56,13 +58,11 @@ class Bar(pygame.Rect):
 
 
 class Pong:
-    BPM = 120   # Beats per minute
+    BPM = 120       # Beats per minute
     BPS = BPM/60
     BPF = BPS/60
-    FBP = 1/BPF
-    
-    good_timing = [27, 28, 29, 30, 0, 1, 2, 3, 12, 13, 14, 15, 16, 17, 18]  # Frames which are counted as good
-    
+    FPB = 1/BPF
+    good_timing = [27, 28, 29, 30, 0, 1, 2, 3, 12, 13, 14, 15, 16, 17, 18] # Frame which are counted as good
     frame = 0
     
     HEIGHT = 600
@@ -94,7 +94,7 @@ class Pong:
         # Setup the screen
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.clock = pygame.time.Clock()
-        
+
         # Setup the field
         self.central_line = pygame.Rect(self.WIDTH / 2, 0, 5, self.HEIGHT)
         self.left_third_line = pygame.Rect(self.WIDTH / 3, 0, 3, self.HEIGHT)
@@ -186,9 +186,10 @@ class Pong:
                 if ball.colliderect(paddle):
                     ball.velocity = -ball.velocity
                     ball.x += ball.velocity * 5
-                    ball.angle = (((self.HEIGHT/2-ball.y)/(self.HEIGHT/2)) + (np.random.random()-0.5))*abs(ball.velocity)
-                    
-                     if round(self.frame % self.FPB) in self.good_timing:
+                    ball.angle = (((self.HEIGHT / 2 - ball.y) / (self.HEIGHT / 2)) + (np.random.random() - 0.5)) * abs(
+                        ball.velocity)
+
+                    if round(self.frame % self.FPB) in self.good_timing:
                         if ball.x > self.WIDTH / 2 and not self.light_up_right:
                             self.start_light_up_right(True)
                             self.update_speed_left()
@@ -202,8 +203,9 @@ class Pong:
                             self.update_speed_left()
                         elif not self.light_up_left:
                             self.start_light_up_left(False)
-                            self.update_speed_right()                           
+                            self.update_speed_right()
                         break
+
 
     # Start to light up right side of the field
     def start_light_up_right(self, good):
@@ -215,6 +217,7 @@ class Pong:
             self.light_up_colour_right = (255, 0, 0)
             self.fade_colour_right = (self.FADE, 0, 0)
 
+
     # Start to light up left side of the field
     def start_light_up_left(self, good):
         self.light_up_left = 1
@@ -224,6 +227,7 @@ class Pong:
         else:
             self.light_up_colour_left = (255, 0, 0)
             self.fade_colour_left = (self.FADE, 0, 0)
+
 
     # Update lit up sides of the field
     def adjust_light_up(self):
@@ -240,19 +244,22 @@ class Pong:
                 self.light_up_left = 0
             return False
 
+
     def update_speed_left(self):
         speed = int(random.randint(70, 85) * self.speed_multiplier_for_text)
         self.speed_text_surface_left = self.speed_font.render(str(speed), False, (255, 255, 255))
         self.speed_text_surface_left = pygame.transform.rotate(self.speed_text_surface_left, 90)
+
 
     def update_speed_right(self):
         speed = int(random.randint(70, 85) * self.speed_multiplier_for_text)
         self.speed_text_surface_right = self.speed_font.render(str(speed), False, (255, 255, 255))
         self.speed_text_surface_right = pygame.transform.rotate(self.speed_text_surface_right, 90)
 
+
     def game_loop(self):
         pygame.mixer.music.load("Epoch.mp3")
-        pygame.mixer.music.play()        
+        pygame.mixer.music.play()
         while True:
 
             for event in pygame.event.get():
@@ -272,7 +279,7 @@ class Pong:
                 pygame.draw.rect(self.screen, self.light_up_colour_right, self.light_up_rect_right)
             if self.light_up_left:
                 pygame.draw.rect(self.screen, self.light_up_colour_left, self.light_up_rect_left)
-            
+
             # Draw field
             pygame.draw.rect(self.screen, self.COLOUR, self.central_line)
             pygame.draw.rect(self.screen, self.COLOUR, self.left_third_line)
@@ -285,8 +292,8 @@ class Pong:
             # Project text
             (self.width_speed_text_l, self.height_speed_text_l) = self.speed_text_surface_left.get_size()
             (self.width_speed_text_r, self.height_speed_text_r) = self.speed_text_surface_right.get_size()
-            self.screen.blit(self.speed_text_surface_left, (self.WIDTH/6 - self.width_speed_text_l/2,
-                                                            self.HEIGHT/2 - self.height_speed_text_l/2))
+            self.screen.blit(self.speed_text_surface_left, (self.WIDTH / 6 - self.width_speed_text_l / 2,
+                                                            self.HEIGHT / 2 - self.height_speed_text_l / 2))
             self.screen.blit(self.speed_text_surface_right, (5 * self.WIDTH / 6 - self.width_speed_text_r / 2,
                                                              self.HEIGHT / 2 - self.height_speed_text_r / 2))
 
@@ -303,7 +310,7 @@ class Pong:
             if not self.c_pressed and pygame.key.get_pressed()[pygame.K_c]:
                 self.CIRCLE_SPEED = self.CIRCLE_SPEED / self.CIRCLE_SPEED_UP
                 for ball in self.balls:
-                    ball.change_velocity_ball(1/self.CIRCLE_SPEED_UP)
+                    ball.change_velocity_ball(1 / self.CIRCLE_SPEED_UP)
                 self.speed_multiplier_for_text = self.speed_multiplier_for_text / self.CIRCLE_SPEED_UP
                 self.c_pressed = True
             elif self.c_pressed and not pygame.key.get_pressed()[pygame.K_c]:
@@ -331,9 +338,9 @@ class Pong:
             for ball in self.balls:
                 ball.move_ball()
                 pygame.draw.rect(self.screen, self.COLOUR, ball)
-            
+
             self.frame += 1
-            
+
             pygame.display.flip()
             self.clock.tick(60)
 
@@ -341,4 +348,3 @@ class Pong:
 if __name__ == '__main__':
     pong = Pong()
     pong.game_loop()
-
