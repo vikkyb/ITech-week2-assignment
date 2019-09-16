@@ -63,7 +63,7 @@ class Pong:
     BPF = BPS/60
     FPB = 1/BPF
     good_timing = [27, 28, 29, 30, 0, 1, 2, 3, 12, 13, 14, 15, 16, 17, 18] # Frame which are counted as good
-    frame = 0
+    frame = -2
     
     HEIGHT = 600
     WIDTH = 1200
@@ -185,7 +185,8 @@ class Pong:
             for paddle in self.paddles:
                 if ball.colliderect(paddle):
                     ball.velocity = -ball.velocity
-                    ball.x += ball.velocity * 5
+                    ball.x += ball.velocity * 10
+                    paddle.x -= ball.velocity * 10
                     ball.angle = (((self.HEIGHT / 2 - ball.y) / (self.HEIGHT / 2)) + (np.random.random() - 0.5)) * abs(
                         ball.velocity)
 
