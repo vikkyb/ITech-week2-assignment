@@ -56,6 +56,15 @@ class Bar(pygame.Rect):
 
 
 class Pong:
+    BPM = 120   # Beats per minute
+    BPS = BPM/60
+    BPF = BPS/60
+    FBP = 1/BPF
+    
+    good_timing = [27, 28, 29, 30, 0, 1, 2, 3, 12, 13, 14, 15, 16, 17, 18]  # Frames which are counted as good
+    
+    frame = 0
+    
     HEIGHT = 600
     WIDTH = 1200
 
@@ -177,14 +186,24 @@ class Pong:
                 if ball.colliderect(paddle):
                     ball.velocity = -ball.velocity
                     ball.x += ball.velocity * 5
-                    ball.angle = (((300-ball.y)/300) + (np.random.random()-0.5))*abs(ball.velocity)
-                    if ball.x > self.WIDTH / 2 and not self.light_up_right:
-                        self.start_light_up_right(random.choices([True, False], weights=[self.RATIO_GOOD, 1], k=1)[0])
-                        self.update_speed_left()
-                    elif not self.light_up_left:
-                        self.start_light_up_left(random.choices([True, False], weights=[self.RATIO_GOOD, 1], k=1)[0])
-                        self.update_speed_right ()
-                    break
+                    ball.angle = (((self.HEIGHT/2-ball.y)/(self.HEIGHT/2)) + (np.random.random()-0.5))*abs(ball.velocity)
+                    
+                     if round(self.frame % self.FPB) in self.good_timing:
+                        if ball.x > self.WIDTH / 2 and not self.light_up_right:
+                            self.start_light_up_right(True)
+                            self.update_speed_left()
+                        elif not self.light_up_left:
+                            self.start_light_up_left(True)
+                            self.update_speed_right()
+                        break
+                    else:
+                        if ball.x > self.WIDTH / 2 and not self.light_up_right:
+                            self.start_light_up_right(False)
+                            self.update_speed_left()
+                        elif not self.light_up_left:
+                            self.start_light_up_left(False)
+                            self.update_speed_right()                           
+                        break
 
     # Start to light up right side of the field
     def start_light_up_right(self, good):
@@ -232,6 +251,8 @@ class Pong:
         self.speed_text_surface_right = pygame.transform.rotate(self.speed_text_surface_right, 90)
 
     def game_loop(self):
+        pygame.mixer.music.load("Epoch.mp3")
+        pygame.mixer.music.play()        
         while True:
 
             for event in pygame.event.get():
@@ -310,7 +331,9 @@ class Pong:
             for ball in self.balls:
                 ball.move_ball()
                 pygame.draw.rect(self.screen, self.COLOUR, ball)
-
+            
+            self.frame += 1
+            
             pygame.display.flip()
             self.clock.tick(60)
 
