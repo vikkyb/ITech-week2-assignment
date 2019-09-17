@@ -218,7 +218,6 @@ class Pong:
             self.light_up_colour_right = (255, 0, 0)
             self.fade_colour_right = (self.FADE, 0, 0)
 
-
     # Start to light up left side of the field
     def start_light_up_left(self, good):
         self.light_up_left = 1

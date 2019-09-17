@@ -1,0 +1,28 @@
+The file pong_extended.py can be run which is a running game that simulates an idea for an
+interactive LED-court for volleyball.
+
+------------------------------------------------------------------------------------------
+Controls:
+Moving the player on the right side of the field
+    RIGHT ARROW    ->   move right
+    LEFT ARROW     ->   move left
+    UP ARROW       ->   move up
+    DOWN ARROW     ->   move down
+
+Moving the player on the left side of the field
+    D   ->  move right
+    A   ->  move left
+    W   ->  move up
+    S   ->  move down
+
+SPACE BAR   ->  speed up ball + rhythm of circles with factor 1.5
+C           ->  slow down ball + rhythm of circles with factor 1.5
+
+------------------------------------------------------------------------------------------
+This simulation is in 2D and the height aspect of volleyball is ignored. In this simulation
+there is one player on each side of the field which can be moved using keyboard input
+(technically they can both be moved to the other side of the field, but it is assumed that
+for the purpose of the game the user will not do this and instead follow the volleyball
+rules). The ball can be played by colliding with a player object. When the ball leaves the
+field the game is over. The pulsing rings and the ball can be sped up and down using
+keyboard input.
